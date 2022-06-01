@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import PostModel from "./PostModel";
 
 
 const Main  = (props) => {
@@ -88,6 +89,7 @@ const Main  = (props) => {
                 </Article>
 
             </div>
+            <PostModel/>
     </Container>;
 }
 
