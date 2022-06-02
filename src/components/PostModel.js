@@ -1,17 +1,31 @@
 
+
 import styled from "styled-components";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReactPlayer from "react-player";
 import { Avatar } from "@material-ui/core";
 import { selectUser} from '../features/userSlice'
 import { useDispatch, useSelector } from 'react-redux';
-
+import {db} from "../firebase"
 
 const PostModel =(props) =>{
     const [editorText , setEditorText] = useState("");
     const [shareImage , setShareImage] = useState("");
     const [videoLink , setVideoLink] = useState("");
     const [assetArea , setassestArea] = useState("");
+    const [posts , setPosts] = useState("");
+
+    useEffect(()=>{
+        db.collection("posts").onSnapshot(snapshot => (
+            setPosts(snapshot.docs.map(doc=>({
+                id:doc.id,
+                data:doc.data(),
+
+            })))
+        ))
+    },[])
+
+
 
 const user = useSelector(selectUser);
   const dispatch = useDispatch();

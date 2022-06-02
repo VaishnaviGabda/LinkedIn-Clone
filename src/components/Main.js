@@ -3,6 +3,7 @@ import PostModel from "./PostModel";
 import {useState} from "react";
 
 
+
 const Main  = (props) => {
 
   const [showModal , setShowModal] = useState("close");    

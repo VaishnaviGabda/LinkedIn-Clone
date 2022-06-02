@@ -5,6 +5,7 @@ import { login } from "../features/userSlice";
 
 
 
+
 const Login = (props) =>{
 
   const dispatch = useDispatch();
@@ -14,7 +15,7 @@ const Login = (props) =>{
       .then(({ user }) => {
         dispatch(
           login({
-            displayName: user.displayName,
+            displayName: user.user.displayName,
             email: user.email,
             photoUrl: user.photoURL,
           })
