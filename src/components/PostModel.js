@@ -4,12 +4,20 @@ import { useState } from "react";
 
 const PostModel =(props) =>{
     const [editorText , setEditorText] = useState("");
+    const reset=(e)=>{
+        setEditorText("");
+        props.handleClick(e);
+    }
 
-    return <Container>
+    return (
+    <>
+    {
+        props.showModal === "open" &&
+    <Container>
         <Content>
             <Header>
             <h2>Create a post</h2>
-            <button>
+            <button onClick={(event) => reset(event)}>
                 <img src="images/close.PNG" alt=""/>
             </button>
             </Header>
@@ -43,11 +51,13 @@ const PostModel =(props) =>{
                     AnyOne
                 </AssestButton>
                 </ShareComment>
-                <PostButton>Post</PostButton>
+                <PostButton disabled={!editorText ? true: false}>Post</PostButton>
             </ShareCreation>
             </Content>
     </Container>
-
+}
+    </>
+);
 };
 
 const Container = styled.div`
@@ -60,6 +70,7 @@ z-index: 9999;
 color: black;
 background-color: black;
 background-color: rgba(0,0,0,0.8);
+animation: fadeIn 0.3s;
 `;
 
 const Content = styled.div`
@@ -192,10 +203,10 @@ min-width: 60px;
 border-radius: 20px;
 padding-left: 16px;
 padding-right: 16px;
-background: #0a66c2;
-color:white;
+background: ${(props) => (props.disabled ? "rgba(0,0,0,0.8)" :"#0a66c2")};
+color:  ${(props) => (props.disabled ? "rgba(1,1,1,0.2)" :"white")};
 &:hover{
-    background: #004182;
+    background:  ${(props) => (props.disabled ? "rgba(0,0,0,0.08)" :"#004182")};
 }
 `;
 
