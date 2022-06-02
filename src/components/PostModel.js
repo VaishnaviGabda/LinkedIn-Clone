@@ -1,11 +1,44 @@
 
 import styled from "styled-components";
 import { useState } from "react";
+import ReactPlayer from "react-player";
+import { Avatar } from "@material-ui/core";
+import { selectUser} from '../features/userSlice'
+import { useDispatch, useSelector } from 'react-redux';
+
 
 const PostModel =(props) =>{
     const [editorText , setEditorText] = useState("");
+    const [shareImage , setShareImage] = useState("");
+    const [videoLink , setVideoLink] = useState("");
+    const [assetArea , setassestArea] = useState("");
+
+const user = useSelector(selectUser);
+  const dispatch = useDispatch();
+    const handleChange = (e) =>{
+        const image = e.target.files[0];
+
+        if (image === "" || image === undefined)
+        {
+            alert(`not an image , the file is a ${typeof image}`);
+            return;
+        }
+        setShareImage(image);
+    };
+
+    const SwitchAssestArea= (area) =>{
+        setShareImage("");
+        setVideoLink("");
+        setassestArea(area);
+
+    }
+
+
     const reset=(e)=>{
         setEditorText("");
+        setShareImage("");
+        setVideoLink("");
+        setassestArea("");
         props.handleClick(e);
     }
 
@@ -23,25 +56,51 @@ const PostModel =(props) =>{
             </Header>
             <SharedContent>
                 <UserInfo>
-                    <img src="/images/user.svg" alt=""/>
-                    <span>Name</span>
+                    <Avatar src={user?.photoUrl}/>
+                <span>{user?user.displayName : "Me"}</span>
                 </UserInfo>
                 <Editor>
                 <textarea value={editorText} 
                 onChange={(e) => setEditorText(e.target.value)} 
                 placeholder="What do you want to talk about?" 
                 autoFocus={true}
-                >
-                </textarea>
+                />
+
+                { assetArea === "image" ?(
+                <UploadImage>
+
+                    <input type="file" accept="image/gif ,image/jpeg , image/png"
+                    name="image" id ="file" style={{display:"none"}}
+                    onChange={handleChange}/>
+                    <p>
+                        <label htmlFor="file">
+                            Select an image to share
+                        </label>
+                    </p>
+                    {shareImage && <img src={URL.createObjectURL(shareImage)}/>}
+                     </UploadImage>
+                    ) : (
+                        assetArea === "media" && (
+                                 <>
+                    <input type="text" placeholder ="Please input a video link"
+                    value={videoLink}
+                    onChange={(e)=> setVideoLink(e.target.value)}
+                    />
+                    {videoLink && <ReactPlayer width={"100%"} url={videoLink}/>}
+                    </>
+                     )
+               ) }
+               
+             
                 </Editor>
 
             </SharedContent>
             <ShareCreation>
             <AttachAssets>
-                <AssestButton>
+                <AssestButton onClick={() => SwitchAssestArea("image")}>
                     <img src="images/gallery.PNG" alt=""/>
                 </AssestButton>
-                 <AssestButton>
+                 <AssestButton onClick={() => SwitchAssestArea("media")}>
                     <img src="images/video.PNG" alt=""/>
                 </AssestButton>
                 </AttachAssets>
@@ -226,6 +285,14 @@ input{
     margin-bottom: 20px;
 }
 
+`;
+
+
+const UploadImage = styled.div`
+text-align: center;
+img{
+    width: 100%;
+    }
 `;
 
 export default PostModel;
